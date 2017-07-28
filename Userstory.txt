@@ -1,0 +1,11 @@
+User Story für Taschenrechner mit Windows Forms Oberfläche
+
+Titel: Benutzeroberfläche des Taschenrechners
+Story: Erstellen einer Benutzeroberfläche des Taschenrechners mit Windows Forms-Desinger
+Akzeptanzkriterien:
+•	Für die Anzeige der Rechnung Label verwenden. Es können zwanzig Zeichen dargestellt werden.
+•	Schaltflächen: Zahlen von 0 bis 9, C, +,-, *, /, =
+•	Verwendung eines TabelLayoutPanels (4 mal 4)
+•   Das Fenster hat eine festgelegte Größe
+Status:
+•	Implementiert

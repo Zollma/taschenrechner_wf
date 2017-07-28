@@ -10,11 +10,21 @@ using System.Windows.Forms;
 
 namespace Taschenrechner_WF
 {
-    public partial class Form1 : Form
+    public partial class TaschenrechnerForm : Form
     {
-        public Form1()
+        public TaschenrechnerForm()
         {
             InitializeComponent();
+        }
+
+        private void AnzeigeRechnung_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TaschenrechnerForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
