@@ -9,3 +9,31 @@ Akzeptanzkriterien:
 •   Das Fenster hat eine festgelegte Größe
 Status:
 •	Implementiert
+
+Titel: Rechenoperationen
+Story: Erstellen der Rechenoperationen +,-,*,/
+Akzeptanzkriterien:
+•	Es werden solange Rechenopertaionen ausgeführt bis das Gleichheitszeichen betätigt wird.
+•	Mit der Taste "C" werden die letzten Operationen gelöscht.
+•	Wenn eine Rechenoperation betätigt wird, wird das Ergebnis der letzten Rechnung automatisch angezeigt. 
+•	Das Gleichheitszeichen "=" zeigt das Ergebnis der Rechnung an.
+Status:
+	Implementiert
+
+Titel: Designentscheidung , Orientierung am MVC 
+Story: Das Design orientiert sich am MVC
+Akzeptanzkriterien:
+•	View: Implemtierung des Forms
+•	Model: Rechenoperationen werden im Model implementiert
+•	Controller: Die Steuerung der Applikation erfolgt durch die von Visual Studio erzeugte Klasse Application
+Status:
+	Impelementiert
+
+Titel: Punkt vor Strich Implementierung
+Story: Bei der Eingabe der Rechenoperationen gelten die Punkt vor Strich Regeln
+Akzeptanzkriterien:
+•	Wechselt die Rechenoperation Strich auf Punkt, so muss die Zahl mit der Strichoperaion zwischengespeichert werden. 
+	Erfolgt dann das Gleichheitszeichen oder ein Wechsel von Punkt auf Strich, so wird die gespeicherte Zahl verrechnet und das 
+	Zwischenergebnis angezeigt.
+Status:
+	Implementiert
