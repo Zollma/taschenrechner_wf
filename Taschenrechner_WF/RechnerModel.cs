@@ -97,6 +97,11 @@ namespace Taschenrechner_WF
                 if(PunktVorStrich(operation1,operation2))
                 {
                     //zahl1 und operation1 für spätere Berechnung merken
+                    if((Double.IsNaN(zahl3)) && (Resultat != 0))
+                    {
+                        zahl2 = zahl1;
+                        zahl1 = Resultat;
+                    }
 
                 }
                 else
@@ -125,7 +130,7 @@ namespace Taschenrechner_WF
                     zahl2 = Resultat;
                     zahl3 = Double.NaN;
                   
-                    if (WechselVonPunktAufStrich(operation2, operation3))
+                    if ((WechselVonPunktAufStrich(operation2, operation3)) || (operation3 == ISTGLEICH))
                     {
                         //Wenn ein Wechsel von Punkt auf Strich stattfindet, kann die zahl1 zu dem Zwischenresultat verechnet werden
                         Berechne(zahl1, Resultat, operation1);
