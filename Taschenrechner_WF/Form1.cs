@@ -23,23 +23,21 @@ namespace Taschenrechner_WF
 
         private void OperationAusfuehren(string operation)
         {
+            rechner.Operation = operation;
+
             if (anzeigeString != "")
             {
                 double zahl = Convert.ToDouble(anzeigeString);
                 rechner.SetzeZahl(zahl);
                 anzeigeString = "";
-                rechner.Operation = operation;
+                
                 //Wenn genügend Zahlen für eine Berechnung vorliegen und ein Zwischenergebnis geliefert werden kann
                 if (rechner.RechnungAuswerten())
                 {
                     this.AnzeigeRechnung.Text = Convert.ToString(rechner.Resultat);
                 }   
             }
-            if (operation == "=")
-            {
-                anzeigeString = Convert.ToString(rechner.Resultat);
-            }
-
+          
             if (operation == "C")
             {
                 this.AnzeigeRechnung.Text = "";

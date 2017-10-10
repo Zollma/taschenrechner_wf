@@ -17,12 +17,20 @@ namespace Taschenrechner_WF
         private const string ISTGLEICH = "=";
 
         //Variablen
+        //Zahlen die vom GUI kommen
+        private double zahlenspeicher1;
+        private double zahlenspeicher2;
+        //Zahlen für die Berechnung
         private double zahl1;
         private double zahl2;
-        private double zahl3;
+        private double zwischenErgebnis;
         private string operation1;
         private string operation2;
-        private string operation3;
+        private string operationBerechnungAusfuehren;
+        //Operation und Zahl für spätere Strichberechnung
+        private string operationStrich;
+        private double zahlStrich;
+        bool berechneStrich;
 
         public double Resultat { get; private set; }
         public string ErrorAnzeige { get; private set; }
@@ -45,10 +53,7 @@ namespace Taschenrechner_WF
                 {
                     operation2 = value;
                 }
-                else
-                {
-                    operation3 = value;
-                }
+                
                 operation = value;
             }
         }
@@ -60,98 +65,94 @@ namespace Taschenrechner_WF
             Initialisiere();
         }
 
+        private void ZahlenspeicherInitialisieren()
+        {
+            zahlenspeicher1 = Double.NaN;
+            zahlenspeicher2 = Double.NaN;
+        }
+
         private void Initialisiere()
         {
+            ZahlenspeicherInitialisieren();
             zahl1 = Double.NaN;
             zahl2 = Double.NaN;
-            zahl3 = Double.NaN;
+            zwischenErgebnis = Double.NaN;
             Resultat = 0;
             ErrorAnzeige = "";
             operation1 = "";
             operation2 = "";
-            operation3 = "";
+            operationBerechnungAusfuehren = "";
+            InitialisiereZahlStrichUndOperationStrich();
         }
 
         public void SetzeZahl(double zahl)
         {
-            if(Double.IsNaN(zahl1))
+            if(Double.IsNaN(zahlenspeicher1))
             {
-                zahl1 = zahl;
+                zahlenspeicher1 = zahl;
             }
-            else if (Double.IsNaN(zahl2))
+            else if (Double.IsNaN(zahlenspeicher2))
             {
-                zahl2 = zahl;
+                zahlenspeicher2 = zahl;
             }
-            else if (Double.IsNaN(zahl3))
+        }
+
+        private bool IstZahlenSpeicherFuerBerechnungBereit()
+        {
+            bool bereit = false;
+            if ((!(Double.IsNaN(zahlenspeicher1))) && (!(Double.IsNaN(zahlenspeicher2))))
             {
-                zahl3 = zahl;
-            }     
+                bereit = true;
+            }
+            return bereit;
+        }
+
+        private bool IstZahlStrichUndOperationStrichBereit()
+        {
+            bool bereit = false;
+            if(!(Double.IsNaN(zahlStrich))&& (operationStrich != ""))
+            {
+                bereit = true;
+            }
+            return bereit; 
+        }
+
+        private void InitialisiereZahlStrichUndOperationStrich()
+        {
+            operationStrich = "";
+            zahlStrich = Double.NaN;
+            berechneStrich = false;
         }
 
         public bool RechnungAuswerten()
         {
             bool bl_brechnung = false;
 
-            if((operation1 != "") && (operation2 != "")&& (operation3 == ""))
+            if (IstZahlenSpeicherFuerBerechnungBereit())
             {
-                if(PunktVorStrich(operation1,operation2))
+                PruefeZeichenWechsel();
+                if (IstZahlenSpeicherFuerBerechnungBereit())
                 {
-                    //zahl1 und operation1 für spätere Berechnung merken
-                    if((Double.IsNaN(zahl3)) && (Resultat != 0))
-                    {
-                        zahl2 = zahl1;
-                        zahl1 = Resultat;
-                    }
-
-                }
-                else
-                {
-                    if(Double.IsNaN(zahl2))
-                    {
-                        Berechne(Resultat, zahl1, operation1);
-                    }
-                    else
-                    {
-                        Berechne(zahl1, zahl2, operation1);
-                    }
-                    zahl1 = Double.NaN;
-                    zahl2 = Double.NaN;
-                    operation1 = operation2;
-                    operation2 = "";
                     bl_brechnung = true;
+                    zahl1 = zahlenspeicher1;
+                    zahl2 = zahlenspeicher2;
+                    ZahlenspeicherInitialisieren();
+                    Berechne(zahl1, zahl2, operationBerechnungAusfuehren);
+
+                    if (berechneStrich)
+                    {
+                        Berechne(Resultat, zahlStrich, operationStrich);
+                        InitialisiereZahlStrichUndOperationStrich();
+                    }
+
+                    zwischenErgebnis = Resultat;
+                    zahlenspeicher1 = zwischenErgebnis;
                 }
+
             }
 
-            if (operation3 != "")
-            {
-                if(PunktVorStrich(operation1, operation2))
-                {
-                    Berechne(zahl2, zahl3, operation2);
-                    zahl2 = Resultat;
-                    zahl3 = Double.NaN;
-                  
-                    if ((WechselVonPunktAufStrich(operation2, operation3)) || (operation3 == ISTGLEICH))
-                    {
-                        //Wenn ein Wechsel von Punkt auf Strich stattfindet, kann die zahl1 zu dem Zwischenresultat verechnet werden
-                        Berechne(zahl1, Resultat, operation1);
-                        bl_brechnung = true; // Resultat kann angezeigt werden
-                        zahl1 = Resultat;
-                        zahl2 = Double.NaN;
-                        operation1 = operation3;
-                        operation2 = "";
-                        operation3 = "";
-                        
-                    }
-                    else
-                    {
-                        operation2 = operation3;
-                        operation3 = "";
-                    }
-                    
-                }
-            }
-
-                return bl_brechnung;
+            
+            return bl_brechnung;
         }
 
         private void Berechne (double zahl1, double zahl2, string operation)
@@ -179,7 +180,45 @@ namespace Taschenrechner_WF
             }
         }
 
-        private bool PunktVorStrich(string operation1, string operation2)
+        private void PruefeZeichenWechsel()
+        {
+            //Fall1: Kein Wechsel
+            if (operation1 == operation2)
+            {
+                operationBerechnungAusfuehren = operation1;
+                operation1 = operation2;
+                operation2 = "";
+            }
+            else
+            {
+                if(WechselVonStrichAufPunkt())
+                {
+                    //Fall3: Wechsel von Strich auf Punkt
+                    zahlStrich = zahlenspeicher1;
+                    zahlenspeicher1 = zahlenspeicher2;
+                    zahlenspeicher2 = Double.NaN;
+                    operationStrich = operation1;
+                    operation1 = operation2;
+                    operation2 = "";
+                }
+                else
+                {
+                    //Fall2: Wechsel im Strichbereich bzw. Punktbereich bzw. Istgleich-Zeichen
+                    //Fall4: Wechsel von Punkt auf Strich
+                    if ((WechselVonPunktAufStrich()|| operation2 == ISTGLEICH) && IstZahlStrichUndOperationStrichBereit())
+                    {
+                        berechneStrich = true;
+                    }
+                    operationBerechnungAusfuehren = operation1;
+                    operation1 = operation2;
+                    operation2 = "";
+                    
+                       
+                }
+            }
+        }
+
+        private bool WechselVonStrichAufPunkt()
         {
             bool bl_punktVorstrich = false;
             if ((operation1 == PLUS || operation1 == MINUS) && (operation2 == MAL || operation2 == GETEILT))
@@ -189,7 +228,7 @@ namespace Taschenrechner_WF
             return bl_punktVorstrich;
         }
 
-        private bool WechselVonPunktAufStrich (string operation1, string operation2)
+        private bool WechselVonPunktAufStrich ()
         {
             bool bl_wechsel = false;
 
