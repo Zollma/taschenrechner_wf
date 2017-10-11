@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Taschenrechner_WF
 {
-    class RechnerModel
+    public class RechnerModel
     {
 
        //Konstanten
@@ -186,8 +186,6 @@ namespace Taschenrechner_WF
             if (operation1 == operation2)
             {
                 operationBerechnungAusfuehren = operation1;
-                operation1 = operation2;
-                operation2 = "";
             }
             else
             {
@@ -197,9 +195,7 @@ namespace Taschenrechner_WF
                     zahlStrich = zahlenspeicher1;
                     zahlenspeicher1 = zahlenspeicher2;
                     zahlenspeicher2 = Double.NaN;
-                    operationStrich = operation1;
-                    operation1 = operation2;
-                    operation2 = "";
+                    operationStrich = operation1;  
                 }
                 else
                 {
@@ -209,13 +205,11 @@ namespace Taschenrechner_WF
                     {
                         berechneStrich = true;
                     }
-                    operationBerechnungAusfuehren = operation1;
-                    operation1 = operation2;
-                    operation2 = "";
-                    
-                       
-                }
+                    operationBerechnungAusfuehren = operation1;    
+                }  
             }
+            operation1 = operation2;
+            operation2 = "";
         }
 
         private bool WechselVonStrichAufPunkt()
